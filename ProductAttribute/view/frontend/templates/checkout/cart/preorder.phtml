@@ -1,0 +1,63 @@
+<?php
+
+    $helper = $this->helper('Dev\ProductAttribute\Helper\Data');
+    $items = $helper->getAllItems();
+    
+    $preOrder[] = '';
+    $nonPreOrder[] = '';
+    foreach($items as $item)
+    {
+        if($item->getProduct()->getData('pre_order'))
+        {
+            $preOrder[] = $item->getProduct()->getData('pre_order');
+        }
+        else
+        {
+            $nonPreOrder[] = $item->getProduct()->getData('');
+        }
+    }
+    if((count($preOrder) > 1) && (count($nonPreOrder) > 1)) 
+    {
+?>
+<div id="popup-modal" style="color:red; font-size:x-large; font-weight:100;">
+<?php 
+//    echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('popupblock')->toHtml();
+   echo "You Can't Buy both <b><u>Pre Ordered</u></b> and <b><u>Non-Pre Ordered</u></b> Products !!!";
+   ?>
+</div>
+<script type="text/javascript">
+
+     require(
+        [
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ],
+        function(
+            $,
+            modal
+        ) {
+            var options = {
+                type: 'popup',
+                responsive: true,
+                innerScroll: true,
+                buttons: [{
+                    text: $.mage.__('Ok'),
+                    class: 'mymodal',
+                    click: function () {
+                        this.closeModal();
+                    }
+                }]
+            };
+
+            var popup = modal(options, $('#popup-modal'));
+            
+            $("#popup-modal").modal("openModal");
+            $('button.checkout').attr('disabled', 'disabled');
+            
+        }
+    );
+
+</script>
+<?php
+    }
+?>
